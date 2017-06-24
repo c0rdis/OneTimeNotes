@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+rom django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django import forms
 from OTN.models import Notes
 from string import ascii_letters, digits
@@ -51,7 +51,7 @@ def otnote(request, note_id):
 def otnote_create(request):
     if request.is_ajax():
         if request.method == 'GET':
-            return HttpResponse('This is XHR GET request... Are you a hacker? :P')
+            raise Http404
         elif request.method == 'POST':
             token = generate_token(6)
             already_exists = True
@@ -62,6 +62,9 @@ def otnote_create(request):
                 except Notes.DoesNotExist:
                     already_exists = False
             otn = request.POST['private_note']
+            # discard messages bigger than 20Kb 
+            if len(otn) > 20 * 1024:
+                return HttpResponseBadRequest('Sorry, that\'s too much!')
             write_note = Notes.objects.create(encrypted_note=otn,token=token,timestamp=datetime.now())
             return HttpResponse(token)
     else:        
