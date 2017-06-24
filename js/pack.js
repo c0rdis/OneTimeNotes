@@ -158,8 +158,11 @@ $.post("/otnote", {
         instructions += document.getElementById("symmkey").value;
         instructions +='</h6>'
         document.getElementById("output").innerHTML += instructions;
-    }
-);
+    })
+    .error( function() { 
+        document.getElementById("output").style.display="none";
+        document.getElementById("output_error").style.display="block"; 
+    });
 }
 
 function noSubmit(e){
