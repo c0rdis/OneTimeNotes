@@ -152,16 +152,19 @@ $.post("/otnote", {
 	part_url += "#";
 	part_url += document.getElementById("symmkey").value;
 	document.getElementById('priv_url_id').innerHTML = part_url;
-        var instructions = '<br><br><br><h1>To send your note and key separately:</h4><br> <h4><span style="color:red">Your encrypted note link:</span>  https://aan.sh/n/'
-        instructions += data
-        instructions += '</h6> <br> <h4><span style="color:red">Your decryption key:</span> '
+        var instructions = '<br><br><br><h1>To send your note and key separately:</h4><br> <h4><span style="color:red">Your encrypted note link:</span>  https://aan.sh/n/';
+        instructions += data;
+        instructions += '</h6> <br> <h4><span style="color:red">Your decryption key:</span> ';
         instructions += document.getElementById("symmkey").value;
-        instructions +='</h6>'
+        instructions +='</h6>';
         document.getElementById("output").innerHTML += instructions;
     })
-    .error( function() { 
-        document.getElementById("output").style.display="none";
-        document.getElementById("output_error").style.display="block"; 
+    .error( function(data) { 
+        var errorOutput = '<h1>Error!</h1>';
+        errorOutput += '<div class="alert alert-danger priv_url" role="alert">';
+        errorOutput += data.responseText;
+        errorOutput += '</div>';
+        document.getElementById("output").innerHTML = errorOutput;
     });
 }
 
