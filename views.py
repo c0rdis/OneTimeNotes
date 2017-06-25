@@ -32,6 +32,7 @@ def generate_token(length):
     token = ''.join(random.sample(allowed_chars,length))
     return token
 
+   
 # delete entries older than 48 hours
 def delete_old_notes():
     if not Notes.objects.count:
