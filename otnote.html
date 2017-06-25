@@ -24,21 +24,15 @@
             {{ form }}
             <input type="hidden" class="form_control" value="secret" id='symmkey'><br>
             <p style="padding-top: 25px">
-	    <span>&nbsp;</span>
+            <span>&nbsp;</span>
             <button class="btn btn-secondary btn-lg submit_otn btn-encrypt" type="button" onclick="setKey()" disabled=true>Encrypt & send</button>
             <span>&nbsp;</span>
             </div>
         </form>
-	<form id="output" style="display:none">
+        <form id="output" style="display:none">
            <h1>Your secret URL:</h1>
               <div class="alert alert-success priv_url" role="alert" id="priv_url_id">
-            	 Private URL will appear here shortly...
-              </div>
-  	</form>
-	<form id="output_error" style="display:none">
-           <h1>Error!</h1>
-              <div class="alert alert-danger priv_url" role="alert" id="priv_url_id">
-                 Sorry, the input text was too big! Current limit is 20Kb.
+                 Private URL will appear here shortly...
               </div>
         </form>
      </div>
