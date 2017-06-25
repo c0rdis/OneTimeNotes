@@ -32,14 +32,14 @@ def generate_token(length):
     token = ''.join(random.sample(allowed_chars,length))
     return token
 
-   
+
 # delete entries older than 48 hours
 def delete_old_notes():
     if not Notes.objects.count:
         return
     current = datetime.now()
     for note in Notes.objects.all():
-        # tzinfo have to be removed for correct naive substraction
+        # tzinfo has to be removed for correct naive substraction
         difference = current - note.timestamp.replace(tzinfo=None)
         difference = int(difference.total_seconds())
         if difference > 48*60*60:
@@ -47,7 +47,7 @@ def delete_old_notes():
     return
 
 
-# handler for /n/<note_id> 
+# handler for /n/<note_id>
 # <note-id> - 6 symbols [a-zA-Z0-9]
 def otnote(request, note_id):
     if any(iua in request.META['HTTP_USER_AGENT'] for iua in ignoredUAs):
@@ -78,12 +78,12 @@ def otnote_create(request):
                 except Notes.DoesNotExist:
                     already_exists = False
             otn = request.POST['private_note']
-            # discard messages bigger than 20Kb 
+            # discard messages bigger than 20Kb
             if len(otn) > 20 * 1024:
                 return HttpResponseBadRequest('Sorry, current note size limit: 20Kb')
             write_note = Notes.objects.create(encrypted_note=otn,token=token,timestamp=datetime.now())
             return HttpResponse(token)
-    else:        
+    else:
         form = OTNForm()
         return render(request,'otnote.html', {'form':form})
 
