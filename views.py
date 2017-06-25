@@ -1,13 +1,14 @@
- -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-rom django.http import HttpResponse, HttpResponseBadRequest, Http404
+from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django import forms
 from OTN.models import Notes
 from string import ascii_letters, digits
 from datetime import datetime
 import random
+
 
 # === VIEWS START HERE ===
 
@@ -31,6 +32,19 @@ def generate_token(length):
     token = ''.join(random.sample(allowed_chars,length))
     return token
 
+# delete entries older than 48 hours
+def delete_old_notes():
+    if not Notes.objects.count:
+        return
+    current = datetime.now()
+    for note in Notes.objects.all():
+        # tzinfo have to be removed for correct naive substraction
+        difference = current - note.timestamp.replace(tzinfo=None)
+        difference = int(difference.total_seconds())
+        if difference > 48*60*60:
+            note.delete()
+    return
+
 
 # handler for /n/<note_id> 
 # <note-id> - 6 symbols [a-zA-Z0-9]
@@ -49,9 +63,10 @@ def otnote(request, note_id):
 
 # handler for /otnote
 def otnote_create(request):
+    delete_old_notes()
     if request.is_ajax():
         if request.method == 'GET':
-            raise Http404
+            return HttpResponseBadRequest('This is XHR GET request... Are you a hacker? :P')
         elif request.method == 'POST':
             token = generate_token(6)
             already_exists = True
@@ -64,9 +79,16 @@ def otnote_create(request):
             otn = request.POST['private_note']
             # discard messages bigger than 20Kb 
             if len(otn) > 20 * 1024:
-                return HttpResponseBadRequest('Sorry, that\'s too much!')
+                return HttpResponseBadRequest('Sorry, current note size limit: 20Kb')
             write_note = Notes.objects.create(encrypted_note=otn,token=token,timestamp=datetime.now())
             return HttpResponse(token)
     else:        
         form = OTNForm()
         return render(request,'otnote.html', {'form':form})
+
+
+# handler for /otn_count
+def otn_stats(request):
+    delete_old_notes()
+    count = Notes.objects.count()
+    return HttpResponse(count)
