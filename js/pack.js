@@ -137,7 +137,8 @@ function setKey() {
 
 function decrypted(data){
     if(typeof data === 'undefined'){
-        document.getElementById('id_private_note').innerHTML = 'Sorry, the link is broken';
+        document.getElementById('id_private_note').innerHTML = 'Decryption key is invalid!';
+        document.location = 'https://giphy.com/search/fail';
     }
 }
 
