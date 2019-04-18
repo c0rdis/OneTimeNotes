@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest, Http404, HttpResponseNotAllowed
 from django import forms
-from OTN.models import Notes
+from OneTimeNotes.models import Notes
 from string import ascii_letters, digits
 from datetime import datetime
 import random

@@ -1,0 +1,5 @@
+include LICENSE
+include README.rst
+recursive-include OneTimeNotes/static *
+recursive-include OneTimeNotes/templates *
+recursive-include docs *
